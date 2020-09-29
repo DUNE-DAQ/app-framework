@@ -23,7 +23,7 @@ FanOutDAQModule<ValueType>::init()
 {
 
   auto inputName = get_config()["input"].get<std::string>();
-  TLOG(TLVL_TRACE, "FanOutDAQModule") << get_name() << ": Getting queue with name " << inputName << " as input";
+/*TLOG(TLVL_TRACE*/LOG_DEBUG(6,"FanOutDAQModule") << get_name() << ": Getting queue with name " << inputName << " as input";
   inputQueue_.reset(new DAQSource<ValueType>(inputName));
   for (auto& output : get_config()["outputs"]) {
     outputQueues_.emplace_back(new DAQSink<ValueType>(output.get<std::string>()));

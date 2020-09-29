@@ -9,7 +9,8 @@
 #include "appfwk/DAQProcess.hpp"
 
 #include "appfwk/CommandFacility.hpp"
-#include "appfwk/Logger.hpp"
+//#include "appfwk/Logger.hpp"
+#include "logging/Logger.hpp"
 
 #include "TRACE/trace.h"
 /**
@@ -47,14 +48,14 @@ DAQProcess::execute_command(std::string const& cmd, std::vector<std::string> con
   for (auto const& dm : daqModuleMap_) {
     // TODO: Alessandro Thea (Alessandro.Thea@cern.ch), Jun-19-2020. Works, but it's too simple. Needs better handling. Timescale TBD. 
     if (!dm.second->has_command(cmd)) {
-      ERS_INFO("Module " << dm.first << " does not have " << cmd);
+      /*ERS_INFO*/LOG_INFO()<<"Module " << dm.first << " does not have " << cmd;
       continue;
     }
 
     daq_module_list.insert(dm.first);
   }
 
-  TLOG(TLVL_TRACE) << "Executing Command " << cmd << " for DAQModules defined in the CommandOrderMap";
+  /*TLOG(TLVL_TRACE)*/LOG_DEBUG(6) << "Executing Command " << cmd << " for DAQModules defined in the CommandOrderMap";
 
   if (commandOrderMap_.count(cmd)) {
     for (auto const& moduleName : commandOrderMap_.at(cmd)) {
@@ -67,10 +68,10 @@ DAQProcess::execute_command(std::string const& cmd, std::vector<std::string> con
     }
   } else {
 
-    ers::debug(CommandOrderNotSpecified(ERS_HERE, cmd));
+	  /*ers::debug*/LOG_DEBUG(0)<< CommandOrderNotSpecified(ERS_HERE, cmd);
   }
 
-  TLOG(TLVL_TRACE) << "Executing Command " << cmd << " for all remaining DAQModules";
+  /*TLOG(TLVL_TRACE)*/LOG_DEBUG(6) << "Executing Command " << cmd << " for all remaining DAQModules";
   for (auto const& moduleName : daq_module_list) {
 
     call_command_on_module(*daqModuleMap_.at(moduleName), cmd, args);

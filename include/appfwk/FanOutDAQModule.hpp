@@ -17,8 +17,12 @@
 #include "appfwk/DAQSource.hpp"
 #include "appfwk/ThreadHelper.hpp"
 
-#include "TRACE/trace.h"
-#include <ers/Issue.h>
+#if 0
+# include "TRACE/trace.h"
+# include "ers/Issue.h"
+#else
+# include "logging/Logger.hpp"
+#endif
 
 #include <limits>
 #include <list>

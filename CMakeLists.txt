@@ -7,10 +7,11 @@ include(DAQ)
 daq_setup_environment()
 
 find_package(Boost 1.70.0 COMPONENTS unit_test_framework program_options REQUIRED)
-find_package(TRACE 3.15.09 REQUIRED)
 find_package(cetlib REQUIRED)   # Uses the daq-buildtools/cmake/Findcetlib.cmake
 find_package(folly REQUIRED)
+#find_package(TRACE 3.15.09 REQUIRED)
 find_package(ers REQUIRED)
+find_package(logging REQUIRED)
 find_package(nlohmann_json REQUIRED )
 
 set(APPFWK_DEPENDENCIES ${CETLIB} ${CETLIB_EXCEPT} ers::ers Folly::folly nlohmann_json::nlohmann_json pthread)
@@ -19,7 +20,7 @@ set(APPFWK_DEPENDENCIES ${CETLIB} ${CETLIB_EXCEPT} ers::ers Folly::folly nlohman
 daq_point_build_to( src )
 
 add_library(appfwk SHARED src/QueueRegistry.cpp src/DAQProcess.cpp src/DAQModule.cpp)
-target_link_libraries(appfwk ${APPFWK_DEPENDENCIES})
+target_link_libraries(appfwk ${APPFWK_DEPENDENCIES} logging::logging)
 target_include_directories(appfwk PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> )
 
 add_library(appfwk_QueryResponseCommandFacility_duneCommandFacility src/QueryResponseCommandFacility.cpp)

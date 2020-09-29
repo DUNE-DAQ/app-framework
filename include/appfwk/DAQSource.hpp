@@ -9,8 +9,12 @@
 #ifndef APPFWK_INCLUDE_APPFWK_DAQSOURCE_HPP_
 #define APPFWK_INCLUDE_APPFWK_DAQSOURCE_HPP_
 
-#include "TRACE/trace.h"
-#include "ers/Issue.h"
+#if 0
+# include "TRACE/trace.h"
+# include "ers/Issue.h"
+#else
+# include "logging/Logger.hpp"
+#endif
 #include <appfwk/Queue.hpp>
 #include <appfwk/QueueRegistry.hpp>
 #include <chrono>
@@ -51,7 +55,7 @@ DAQSource<T>::DAQSource(const std::string& name)
 {
   try {
     queue_ = QueueRegistry::get().get_queue<T>(name);
-    TLOG(TLVL_TRACE, "DAQSource") << "Queue " << name << " is at " << queue_.get();
+    /*TLOG*(TLVL_TRACE*/LOG_DEBUG(6,"DAQSource") << "Queue " << name << " is at " << queue_.get();
   } catch (QueueTypeMismatch& ex) {
     throw DAQSourceConstructionFailed(ERS_HERE, name, ex);
   }

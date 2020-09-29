@@ -18,6 +18,7 @@
 #include "appfwk/CommandLineInterpreter.hpp"
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/GraphConstructor.hpp"
+#include "logging/Logger.hpp"	// includes extended ERS_DECLARE_ISSUE
 
 #include <string>
 #include <vector>
