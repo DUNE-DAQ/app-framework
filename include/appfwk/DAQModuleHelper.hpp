@@ -31,6 +31,37 @@ queue_index(const nlohmann::json& iniobj, std::vector<std::string> required = {}
 cmd::QueueInfos
 queue_infos(const nlohmann::json& iniobj);
 
+/// @brief Base case for the variadic template function below
+void
+connect_sinks_and_sources(appfwk::cmd::ModInit&) {}
+
+/// @brief Connect a list of DAQSinks and DAQSources to the corresponding queue names
+///
+/// The arguments to this function are a ModInit object followed by
+/// pairs of unique_ptr<DAQSink or DAQSource> and the name of the
+/// queue to connect the sink or source to. For example:
+///
+///     std::unique_ptr<DAQSink<MyType1>> sink1;
+///     std::unique_ptr<DAQSink<MyType2>> sink2;
+///     std::unique_ptr<DAQSource<MyType3>> source1;
+///     connect_sinks_and_sources(conf,
+///                               sink1,   "queue1",
+///                               sink2,   "queue2",
+///                               source1, "queue2");
+template<typename T, typename... Args>
+void
+connect_sinks_and_sources(appfwk::cmd::ModInit& conf, std::unique_ptr<T>& p, const char* c, Args&&... args)
+{
+  // Connect the first queue in the list
+  for (const auto& qi : conf.qinfos) {
+    if (qi.name == c) {
+      p.reset(new T(qi.inst));
+    }
+  }
+  // Recursively do the rest
+  connect_sinks_and_sources(conf, args...);
+}
+
 } // namespace appfwk
 
 } // namespace dunedaq
